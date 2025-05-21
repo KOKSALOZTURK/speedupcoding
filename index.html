@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Speed Test</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SPEED UP YOUR TYPING</h1>
+        </header>
+
+        <main>
+            <div class="challenge-selection">
+                <select id="challenge-select">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+            </div>
+
+            <div class="typing-area">
+                <div class="challenge-text" id="challenge-text"></div>
+                <div class="input-container">
+                    <div class="input-card">
+                        <div class="suggestion-label" style="margin-bottom: 8px;">Real-Time Feedback Area</div>
+                        <div id="suggestion-area"></div>
+                        <div id="user-input" class="code-input" contenteditable="true" spellcheck="false"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-Time Feedback Toggle -->
+            <div style="text-align:center; margin-bottom:10px;">
+                <label style="font-weight:bold;">
+                    <input type="checkbox" id="realtime-feedback-toggle" checked>
+                    Real-Time Feedback
+                </label>
+            </div>
+
+            <div class="controls">
+                <button id="prev-challenge" class="nav-button">Previous Challenge</button>
+                <div class="timing-toggle">
+                    <label class="switch">
+                        <input type="checkbox" id="timing-toggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="timing-label">Timed Mode</span>
+                </div>
+                <button id="start-button" class="start-button">Start Challenge</button>
+                <button id="next-challenge" class="nav-button">Next Challenge</button>
+            </div>
+
+            <div class="stats-display">
+                <div class="stat">
+                    <span>Time:</span>
+                    <span id="timer">60</span>s
+                </div>
+                <div class="stat">
+                    <span>WPM:</span>
+                    <span id="wpm">0</span>
+                </div>
+                <div class="stat">
+                    <span>Accuracy:</span>
+                    <span id="accuracy">0</span>%
+                </div>
+            </div>
+
+            <div id="exercise-feedback"></div>
+
+            <div id="results-container" class="results-container"></div>
+
+            <!-- Evaluation and Feedback Charts -->
+            <div class="charts-container">
+                <div class="chart">
+                    <h3>Performance History</h3>
+                    <canvas id="performance-chart"></canvas>
+                </div>
+                <div class="chart">
+                    <h3>Accuracy Trends</h3>
+                    <canvas id="accuracy-chart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/challenges.js"></script>
+    <script src="js/feedback.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 
