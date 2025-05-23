@@ -71,17 +71,16 @@ header h1 {
 }
 
 .challenge-selection {
-    text-align: center;
-    margin-bottom: 30px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .challenge-selection select {
     padding: 10px 20px;
-    margin: 0 10px;
+    margin: 0 5px;
     border: 2px solid var(--secondary-color);
     border-radius: 25px;
     background-color: white;
@@ -89,10 +88,28 @@ header h1 {
     font-size: 1em;
     cursor: pointer;
     transition: all 0.3s ease;
+    min-width: 120px;
 }
 
 .challenge-selection select:hover {
     border-color: var(--accent-color);
+}
+
+.challenge-selection select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+#mode-select {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#duration-select,
+#word-count-select {
+    background-color: var(--secondary-color);
+    color: white;
 }
 
 .typing-area {
