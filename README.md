@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="typing_speed_logo.png" alt="Logo" width="300"/>
+</p>
+
 # Typing Speed Test Application
 
 A web-based typing speed test app designed for developers, focused on improving typing skills by practicing real JavaScript and Python code snippets.
