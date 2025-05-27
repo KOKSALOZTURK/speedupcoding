@@ -1027,22 +1027,15 @@ body > div[style*='position: fixed'] button:hover {
     font-size: 3.2rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    background: linear-gradient(90deg, #00c3ff 0%, #ffff1c 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 2px 12px rgba(0, 195, 255, 0.25), 0 1px 0 #fff;
+    color: #57D1E2;
+    background: none;
+    background-clip: initial;
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
     margin: 0.2em 0 0.4em 0;
     padding: 0.1em 0.5em;
     border-radius: 0.5em;
-    animation: title-glow 2.5s ease-in-out infinite alternate;
+    
 }
 
-@keyframes title-glow {
-    0% {
-        text-shadow: 0 2px 12px rgba(0, 195, 255, 0.25), 0 1px 0 #fff;
-    }
-    100% {
-        text-shadow: 0 4px 24px rgba(255, 255, 28, 0.45), 0 2px 4px #00c3ff;
-    }
-}
