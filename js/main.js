@@ -183,6 +183,7 @@ class TypingTest {
         // Submit Progress button (word mode)
         if (this.submitProgressBtn) {
             this.submitProgressBtn.addEventListener('click', () => {
+                this.isWordModeSubmit = true; // Set flag before ending test
                 this.endTest();
             });
         }
@@ -653,11 +654,12 @@ class TypingTest {
             ? Math.round((finalCorrectChars / normInput.length) * 100) 
             : 0;
 
-        // --- NEW: Calculate overall stats for timed mode if session ended by timer ---
+        // --- NEW: Calculate overall stats for timed mode or word-based submit only ---
         let overallWPM = null;
         let overallAccuracy = null;
         let showOverall = false;
-        if (this.isTimedMode && isTimerExpired) {
+        // Only show overall stats if: (timed mode and timer expired) OR (word mode and submit button was used)
+        if ((this.isTimedMode && isTimerExpired) || (!this.isTimedMode && this.isWordModeSubmit)) {
             // Use cumulative stats for all challenges in this session
             const totalSessionTime = (Date.now() - this.sessionStartTime) / 1000; // seconds
             const totalSessionMinutes = Math.max(totalSessionTime / 60, 0.01);
