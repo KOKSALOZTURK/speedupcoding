@@ -5,107 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Speed Test</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
+        <!-- 1. Site Title -->
         <header>
-            <h1>SPEED UP YOUR TYPING</h1>
+            <img src="typing_speed_logo.png" alt="Typing Speed Logo" class="site-logo" />
+            <h1 class="fancy-title">TypeRace Pro</h1>
         </header>
 
         <main>
+            <!-- 2. Challenge Selection -->
             <div class="challenge-selection">
-                <select id="challenge-select">
+                <select id="challenge-select" class="mode-dependent" aria-label="Select difficulty level">
                     <option value="beginner">Beginner</option>
                     <option value="intermediate">Intermediate</option>
                     <option value="advanced">Advanced</option>
                 </select>
-                <select id="mode-select">
-                    <option value="time">Time-based</option>
-                    <option value="words">Word-based</option>
+                <select id="mode-select" aria-label="Select test mode">
+                    <option value="time">Time Mode</option>
+                    <option value="words">Words Mode</option>
                 </select>
-                <select id="duration-select">
-                    <option value="15">15 seconds</option>
-                    <option value="30">30 seconds</option>
-                    <option value="60">60 seconds</option>
+                <select id="duration-select" aria-label="Select time duration">
+                    <option value="15">15s</option>
+                    <option value="30">30s</option>
+                    <option value="60">60s</option>
+                    <option value="120">120s</option>
                 </select>
-                <select id="word-count-select" style="display: none;">
-                    <option value="15">15 words</option>
+                <select id="word-count-select" aria-label="Select word count" style="display: none;">
                     <option value="25">25 words</option>
-                    <option value="40">40 words</option>
-                    <option value="60">60 words</option>
+                    <option value="50">50 words</option>
                     <option value="100">100 words</option>
                 </select>
             </div>
 
+            <!-- 3. Controls -->
+            <div class="controls">
+                <button id="prev-challenge" class="nav-button" aria-label="Previous challenge">
+                    <span>←</span> Previous
+                </button>
+                <div class="mode-toggles">
+                    <div class="timing-toggle">
+                        <label class="switch" aria-label="Toggle timed mode">
+                            <input type="checkbox" id="timing-toggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="timing-label">Timed Mode</span>
+                    </div>
+                    <!-- Start button moved here -->
+                    <button id="start-button" class="start-button" aria-label="Start challenge">Start</button>
+                    <div class="feedback-toggle">
+                        <label class="switch" aria-label="Toggle real-time feedback">
+                            <input type="checkbox" id="realtime-feedback-toggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="timing-label">Real-time Feedback</span>
+                    </div>
+                </div>
+                <button id="next-challenge" class="nav-button" aria-label="Next challenge">
+                    Next <span>→</span>
+                </button>
+            </div>
+
+            <!-- 4. Stats Display -->
+            <div class="stats-display">
+                <div class="stat" id="wpm-stat">
+                    <span>WPM</span>
+                    <span id="wpm">0</span>
+                </div>
+                <div class="stat" id="timer-stat">
+                    <span>Time Remaining</span>
+                    <span id="timer">0</span>
+                </div>
+                <!-- Submit button for word-based mode, placed after stat boxes -->
+                <button id="submit-progress" class="submit-progress-btn stats-submit-btn" style="display: none; align-self: center;">Submit Progress</button>
+                <div class="stat" id="accuracy-stat">
+                    <span>Accuracy</span>
+                    <span id="accuracy">0%</span>
+                </div>
+            </div>
+
+            <!-- 5. Typing Area -->
             <div class="typing-area">
-                <div class="challenge-text" id="challenge-text"></div>
+                <div class="challenge-text" id="challenge-text" aria-label="Challenge text to type"></div>
                 <div class="input-container">
                     <div class="input-card">
-                        <div class="suggestion-label" style="margin-bottom: 8px;">Real-Time Feedback Area</div>
-                        <div id="suggestion-area"></div>
-                        <div id="user-input" class="code-input" contenteditable="true" spellcheck="false"></div>
+                        <div id="suggestion-area" aria-label="Real-time feedback"></div>
+                        <div id="user-input" 
+                             class="code-input" 
+                             contenteditable="true" 
+                             spellcheck="false"
+                             aria-label="Type your response here"
+                             role="textbox"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Real-Time Feedback Toggle -->
-            <div style="text-align:center; margin-bottom:10px;">
-                <label style="font-weight:bold;">
-                    <input type="checkbox" id="realtime-feedback-toggle" checked>
-                    Real-Time Feedback
-                </label>
-            </div>
+            <!-- 6. Feedback and Results -->
+            <div id="exercise-feedback" class="feedback-container" aria-live="polite"></div>
 
-            <div class="controls">
-                <button id="prev-challenge" class="nav-button">Previous Challenge</button>
-                <div class="timing-toggle">
-                    <label class="switch">
-                        <input type="checkbox" id="timing-toggle" checked>
-                        <span class="slider round"></span>
-                    </label>
-                    <span class="timing-label">Timed Mode</span>
-                </div>
-                <button id="start-button" class="start-button">Start Challenge</button>
-                <button id="next-challenge" class="nav-button">Next Challenge</button>
-            </div>
-
-            <div class="stats-display">
-                <div class="stat">
-                    <span>Time:</span>
-                    <span id="timer">60</span>s
-                </div>
-                <div class="stat">
-                    <span>WPM:</span>
-                    <span id="wpm">0</span>
-                </div>
-                <div class="stat">
-                    <span>Accuracy:</span>
-                    <span id="accuracy">0</span>%
-                </div>
-            </div>
-
-            <div id="exercise-feedback"></div>
-
-            <div id="results-container" class="results-container"></div>
-
-            <!-- Evaluation and Feedback Charts -->
+            <!-- 7. Charts -->
             <div class="charts-container">
                 <div class="chart">
-                    <h3>Performance History</h3>
-                    <canvas id="performance-chart"></canvas>
+                    <h3>wpm history</h3>
+                    <canvas id="performance-chart" aria-label="WPM history chart"></canvas>
                 </div>
                 <div class="chart">
-                    <h3>Accuracy Trends</h3>
-                    <canvas id="accuracy-chart"></canvas>
+                    <h3>accuracy history</h3>
+                    <canvas id="accuracy-chart" aria-label="Accuracy history chart"></canvas>
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/challenges.js"></script>
     <script src="js/feedback.js"></script>
     <script src="js/main.js"></script>
 </body>
-</html> 
+</html>
