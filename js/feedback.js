@@ -18,39 +18,61 @@ class FeedbackManager {
     }
 
     generateHighlightedText(input, text) {
-        
         const tabAsSpaces = '    ';
-        const normInput = input.replace(/\t/g, tabAsSpaces).replace(/\u00A0/g, ' ');
-        const normText = text.replace(/\t/g, tabAsSpaces).replace(/\u00A0/g, ' ');
+        // Normalize: replace tabs with 4 spaces, and non-breaking spaces with regular spaces
+        function normalize(str) {
+            return str.replace(/\t/g, tabAsSpaces).replace(/\u00A0/g, ' ');
+        }
+        const normInput = normalize(input).split('\n');
+        const normText = normalize(text).split('\n');
 
         let highlightedText = '';
         let firstErrorIndex = -1;
         let accuracy = 0;
+        let globalIndex = 0;
 
-        for (let i = 0; i < normInput.length; i++) {
-            const char = normInput[i];
-            const expectedChar = normText[i];
-            if (char === expectedChar) {
-                accuracy++;
-                highlightedText += char;
-            } else {
-                if (firstErrorIndex === -1) {
-                    firstErrorIndex = i;
-                }
-                if (this.realtimeFeedbackEnabled) {
-                    highlightedText += `<span class=\"incorrect-char\">${char}</span>`;
-                } else {
+        const maxLines = Math.max(normInput.length, normText.length);
+        for (let lineNum = 0; lineNum < maxLines; lineNum++) {
+            const inputLine = normInput[lineNum] || '';
+            const textLine = normText[lineNum] || '';
+            // Remove leading whitespace for comparison, but keep for display
+            const inputIndent = inputLine.match(/^\s*/)[0];
+            const textIndent = textLine.match(/^\s*/)[0];
+            const inputContent = inputLine.slice(inputIndent.length);
+            const textContent = textLine.slice(textIndent.length);
+            // For display, use the user's actual indentation
+            highlightedText += inputIndent;
+            // Compare the rest of the line
+            const maxLen = Math.max(inputContent.length, textContent.length);
+            for (let i = 0; i < maxLen; i++) {
+                const char = inputContent[i] || '';
+                const expectedChar = textContent[i] || '';
+                if (char === expectedChar) {
+                    accuracy++;
                     highlightedText += char;
+                } else {
+                    if (firstErrorIndex === -1) {
+                        firstErrorIndex = globalIndex + inputIndent.length + i;
+                    }
+                    if (this.realtimeFeedbackEnabled) {
+                        highlightedText += `<span class=\"incorrect-char\">${char || ' '}</span>`;
+                    } else {
+                        highlightedText += char;
+                    }
                 }
             }
+            // Add newline except for last line
+            if (lineNum < maxLines - 1) {
+                highlightedText += '\n';
+            }
+            globalIndex += inputLine.length + 1; // +1 for newline
         }
-        
         return {
             highlightedText,
             firstErrorIndex,
             accuracy,
-            normInput,
-            normText
+            normInput: normalize(input),
+            normText: normalize(text)
         };
     }
 
@@ -58,33 +80,45 @@ class FeedbackManager {
         if (!this.realtimeFeedbackEnabled) {
             return '';
         }
-
-        
         const tabAsSpaces = '    ';
-        normInput = normInput || input.replace(/\t/g, tabAsSpaces).replace(/\u00A0/g, ' ');
-        normText = normText || text.replace(/\t/g, tabAsSpaces).replace(/\u00A0/g, ' ');
-
-        if (firstErrorIndex === -1) {
-            
-            if (normInput.length > 0) {
-                return 'Keep typing!';
+        function normalize(str) {
+            return str.replace(/\t/g, tabAsSpaces).replace(/\u00A0/g, ' ');
+        }
+        normInput = normInput || normalize(input);
+        normText = normText || normalize(text);
+        // Find the first difference ignoring leading whitespace per line
+        const inputLines = normInput.split('\n');
+        const textLines = normText.split('\n');
+        const maxLines = Math.max(inputLines.length, textLines.length);
+        let globalIndex = 0;
+        for (let lineNum = 0; lineNum < maxLines; lineNum++) {
+            const inputLine = inputLines[lineNum] || '';
+            const textLine = textLines[lineNum] || '';
+            const inputIndent = inputLine.match(/^\s*/)[0];
+            const textIndent = textLine.match(/^\s*/)[0];
+            const inputContent = inputLine.slice(inputIndent.length);
+            const textContent = textLine.slice(textIndent.length);
+            const maxLen = Math.max(inputContent.length, textContent.length);
+            for (let i = 0; i < maxLen; i++) {
+                const char = inputContent[i] || '';
+                const expectedChar = textContent[i] || '';
+                if (char !== expectedChar) {
+                    if (expectedChar === ' ' && char !== ' ') {
+                        return 'Check for missing space.';
+                    } else if (expectedChar === '\n') {
+                        return 'Check for missing line break.';
+                    } else if (expectedChar && char) {
+                        return `Expected '${expectedChar}', but got '${char}'.`;
+                    } else if (!char) {
+                        return 'Keep going!';
+                    }
+                }
             }
-            return '';
+            globalIndex += inputLine.length + 1;
         }
-
-        const expectedChar = normText[firstErrorIndex] || '';
-        const typedChar = normInput[firstErrorIndex] || '';
-
-        if (expectedChar === ' ' && typedChar !== ' ') {
-            return 'Check for missing space.';
-        } else if (expectedChar === '\n') {
-            return 'Check for missing line break.';
-        } else if (expectedChar && typedChar) {
-            return `Expected '${expectedChar}', but got '${typedChar}'.`;
-        } else if (!typedChar) {
-            return 'Keep going!';
+        if (normInput.length > 0) {
+            return 'Keep typing!';
         }
-
         return '';
     }
 
